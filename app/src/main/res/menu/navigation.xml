@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_most_mailed"
+        android:icon="@drawable/ic_email_black_24dp"
+        android:title="@string/title_mailed"
+        />
+
+    <item
+        android:id="@+id/navigation_most_shared"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/title_shared"
+        />
+
+    <item
+        android:id="@+id/navigation_most_viewed"
+        android:icon="@drawable/ic_remove_red_eye_black_24dp"
+        android:title="@string/title_viewed"
+        />
+
+</menu>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">New York Times</string>
+    <string name="title_mailed">Most Mailed</string>
+    <string name="title_shared">Most Shared</string>
+    <string name="title_viewed">Most Viewed</string>
+    <string name="toast_cant_refresh">Could not reload. Please try again later.</string>
+
+    <string name="title_activity_detail">Detail</string>
+    <string name="label_read_full_article">read full article</string>
+</resources>

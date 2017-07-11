@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/test_img"
+                />
+
+            <TextView
+                android:id="@+id/article_category"
+                style="@style/Base.TextAppearance.AppCompat.SearchResult.Subtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="@dimen/material_default"
+                android:paddingLeft="@dimen/material_default"
+                android:paddingRight="@dimen/material_default"
+                android:paddingStart="@dimen/material_default"
+                android:paddingTop="@dimen/material_default"
+                android:textStyle="bold"
+                tools:text="Category"
+                />
+
+            <TextView
+                android:id="@+id/article_title"
+                style="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-condensed"
+                android:padding="@dimen/material_default"
+                tools:text="Title"
+                />
+
+            <TextView
+                android:id="@+id/article_abstract"
+                style="@style/Base.TextAppearance.AppCompat.Body2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/material_default"
+                android:paddingRight="@dimen/material_default"
+                android:paddingStart="@dimen/material_default"
+                android:paddingEnd="@dimen/material_default"
+                tools:text="Abstracst lorem ipsum"
+                />
+
+            <TextView
+                android:id="@+id/article_author"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-condensed"
+                android:textColor="@color/gray"
+                android:paddingEnd="@dimen/material_default"
+                android:paddingLeft="@dimen/material_default"
+                android:paddingRight="@dimen/material_default"
+                android:paddingStart="@dimen/material_default"
+                android:paddingTop="8dp"
+                tools:text="By author"
+                />
+
+            <TextView
+                android:id="@+id/article_date"
+                style="@style/Base.TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-condensed"
+                android:paddingBottom="@dimen/material_default"
+                android:textColor="@color/gray"
+                android:paddingEnd="@dimen/material_default"
+                android:paddingLeft="@dimen/material_default"
+                android:paddingRight="@dimen/material_default"
+                android:paddingStart="@dimen/material_default"
+                android:paddingTop="8dp"
+                tools:text="27 july, 2017"
+                />
+
+            <Button
+                android:id="@+id/action_read_full"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_read_full_article"
+                android:layout_gravity="center"
+                style="@style/Widget.AppCompat.Button.Colored"
+                />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>
