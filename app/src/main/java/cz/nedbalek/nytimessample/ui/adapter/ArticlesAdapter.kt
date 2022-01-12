@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.squareup.picasso.Picasso
 import cz.nedbalek.nytimessample.R
 import cz.nedbalek.nytimessample.lib.SortedRecyclerAdapter
-import cz.nedbalek.nytimessample.ui.helpers.ColorGenerator
+import cz.nedbalek.nytimessample.ui.helpers.getColor
 import cz.nedbalek.nytimessample.viewobjects.Article
 import kotlinx.android.synthetic.main.item_article_simple.view.*
 
@@ -24,7 +24,7 @@ class ArticlesAdapter(val inflater: LayoutInflater, val listener: ArticlesAction
 
         holder.title.text = item.title
         holder.category.text = item.section
-        holder.category.setTextColor(ColorGenerator.getColor(item.section).toInt())
+        holder.category.setTextColor(getColor(item.section))
 
         Picasso.Builder(inflater.context).build().load(item.getImageUrl()).into(holder.image)
     }

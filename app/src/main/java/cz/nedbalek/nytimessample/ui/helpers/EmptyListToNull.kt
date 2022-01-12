@@ -1,10 +1,13 @@
 package cz.nedbalek.nytimessample.ui.helpers
 
 import android.util.Log
-import com.squareup.moshi.*
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import java.io.IOException
 import java.lang.reflect.Type
-
 
 /**
  * Created by prasniatko on 11/07/2017.
@@ -18,8 +21,9 @@ class EmptyListToNull : JsonAdapter.Factory {
     override fun create(type: Type, annotations: Set<Annotation>, moshi: Moshi): JsonAdapter<*>? {
         val rawType = Types.getRawType(type)
         if (!List::class.java.isAssignableFrom(rawType)
-                && !Set::class.java.isAssignableFrom(rawType)
-                && !rawType.isArray) {
+            && !Set::class.java.isAssignableFrom(rawType)
+            && !rawType.isArray
+        ) {
             return null // We only handle arrays
         }
         val delegate = moshi.nextAdapter<Any>(this, type, annotations)
