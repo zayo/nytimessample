@@ -40,7 +40,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun populate(article: Article) {
-        Picasso.with(this).load(article.getImageUrl()).into(image)
+        Picasso.Builder(this).build().load(article.getImageUrl()).into(image)
 
         article_title.text = article.title
         article_category.text = article.section

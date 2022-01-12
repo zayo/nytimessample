@@ -26,7 +26,7 @@ class ArticlesAdapter(val inflater: LayoutInflater, val listener: ArticlesAction
         holder.category.text = item.section
         holder.category.setTextColor(ColorGenerator.getColor(item.section).toInt())
 
-        Picasso.with(inflater.context).load(item.getImageUrl()).into(holder.image)
+        Picasso.Builder(inflater.context).build().load(item.getImageUrl()).into(holder.image)
     }
 
     inner class ArticleViewHolder(view: View) : RecyclerView.ViewHolder(view) {
