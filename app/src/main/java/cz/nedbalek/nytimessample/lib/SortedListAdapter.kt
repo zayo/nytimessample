@@ -1,6 +1,6 @@
 package cz.nedbalek.nytimessample.lib
 
-import android.support.v7.widget.util.SortedListAdapterCallback
+import androidx.recyclerview.widget.SortedListAdapterCallback
 
 /**
  * Created by prasniatko on 27/02/16.

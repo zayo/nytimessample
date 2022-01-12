@@ -1,9 +1,9 @@
 package cz.nedbalek.nytimessample.lib
 
-import android.support.annotation.CallSuper
-import android.support.v4.util.ArrayMap
-import android.support.v7.util.SortedList
-import android.support.v7.widget.RecyclerView
+import androidx.annotation.CallSuper
+import androidx.collection.ArrayMap
+import androidx.recyclerview.widget.SortedList
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup

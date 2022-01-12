@@ -15,10 +15,10 @@ data class Media(
         @Json(name = "media-metadata") val metadata: List<Metadata>?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
             mutableListOf<Metadata>().apply {
                 parcel.readTypedList(this, Metadata.CREATOR)
             })

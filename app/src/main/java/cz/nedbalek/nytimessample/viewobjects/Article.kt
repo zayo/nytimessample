@@ -19,13 +19,13 @@ data class Article(
 ) : Parcelable, SortedItem<Article> {
 
     constructor(parcel: Parcel) : this(
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
-            parcel.readString(),
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
+            parcel.readString()!!,
             mutableListOf<Media>().apply {
                 parcel.readTypedList(this, Media.CREATOR)
             })

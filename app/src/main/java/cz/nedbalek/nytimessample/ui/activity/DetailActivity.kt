@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
 import cz.nedbalek.nytimessample.R
 import cz.nedbalek.nytimessample.ui.helpers.ColorGenerator
@@ -34,7 +34,7 @@ class DetailActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
-        val article = intent.extras[PARAM_ARTICLE] as Article
+        val article = intent.extras?.get(PARAM_ARTICLE) as? Article ?: return
 
         populate(article)
     }
