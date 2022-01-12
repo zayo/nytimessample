@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import cz.nedbalek.nytimessample.R
 import cz.nedbalek.nytimessample.connection.Api
 import cz.nedbalek.nytimessample.connection.ArticlesResponse
+import cz.nedbalek.nytimessample.ui.activity.DetailActivity
 import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter
 import cz.nedbalek.nytimessample.ui.helpers.CardViewDecorator
 import kotlinx.android.synthetic.main.base_content_fragment.*
@@ -26,8 +27,8 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         VIEWED
     }
 
-    val adapter by lazy {
-        ArticlesAdapter(LayoutInflater.from(activity), activity as? ArticlesAdapter.ArticlesActionListener)
+    private val adapter by lazy {
+        ArticlesAdapter(requireContext()) { DetailActivity.create(requireActivity(), it) }
     }
 
     lateinit var apiCall: Call<ArticlesResponse>
@@ -70,7 +71,7 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
 
     override fun onResponse(call: Call<ArticlesResponse>?, response: Response<ArticlesResponse>) {
         if (response.isSuccessful) {
-            response.body()?.results?.let { adapter.swap(it) }
+            response.body()?.results?.let { adapter.submitList(it) }
         } else {
             Toast.makeText(activity, getString(R.string.toast_cant_refresh), Toast.LENGTH_SHORT)
                 .show()

@@ -2,7 +2,6 @@ package cz.nedbalek.nytimessample.viewobjects
 
 import android.os.Parcel
 import android.os.Parcelable
-import cz.nedbalek.nytimessample.lib.SortedItem
 
 /**
  * Created by prasniatko on 10/07/2017.
@@ -16,7 +15,7 @@ data class Article(
         val published_date: String,
         val source: String,
         val media: List<Media>?
-) : Parcelable, SortedItem<Article> {
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
             parcel.readString()!!,
@@ -30,17 +29,13 @@ data class Article(
                 parcel.readTypedList(this, Media.CREATOR)
             })
 
-    fun getImageMetadata() = media?.firstOrNull { it.type == "image" && it.subtype == "photo" }?.metadata?.lastOrNull()
+    val imageUrl: String? get() =
+        media
+        ?.find { it.type == "image" && it.subtype == "photo" }
+        ?.metadata
+        ?.lastOrNull()
+        ?.url
 
-    fun getImageUrl(): String? = getImageMetadata()?.url
-
-    override fun getMappingKey() = url
-
-    override fun compare(item: Article) = published_date.compareTo(item.published_date)
-
-    override fun areContentsTheSame(item: Article) = this == item
-
-    override fun areItemsTheSame(item: Article) = title == item.title && section == item.section
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(url)
         parcel.writeString(section)

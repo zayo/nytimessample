@@ -5,19 +5,16 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
 import cz.nedbalek.nytimessample.R
-import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.MAILED
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.SHARED
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.VIEWED
 import cz.nedbalek.nytimessample.ui.helpers.show
-import cz.nedbalek.nytimessample.viewobjects.Article
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(),
     NavigationBarView.OnItemSelectedListener,
-    NavigationBarView.OnItemReselectedListener,
-    ArticlesAdapter.ArticlesActionListener {
+    NavigationBarView.OnItemReselectedListener {
 
     private val mostMailedFragment by lazy { BaseContentFragment.create(MAILED) }
     private val mostSharedFragment by lazy { BaseContentFragment.create(SHARED) }
@@ -56,7 +53,4 @@ class MainActivity : AppCompatActivity(),
     override fun onNavigationItemReselected(item: MenuItem) {
         currentFragment?.reselected()
     }
-
-    override fun onArticleClicked(article: Article) =
-        DetailActivity.create(this, article)
 }
