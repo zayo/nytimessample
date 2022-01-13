@@ -3,10 +3,13 @@ package cz.nedbalek.nytimessample.viewobjects
 import android.os.Parcel
 import android.os.Parcelable
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
 /**
  * Created by prasniatko on 10/07/2017.
  */
+// TODO use @Parcelize or something more up to date.
+@JsonClass(generateAdapter = true)
 data class Media(
     val type: String,
     val subtype: String,

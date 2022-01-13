@@ -2,10 +2,13 @@ package cz.nedbalek.nytimessample.viewobjects
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.squareup.moshi.JsonClass
 
 /**
  * Created by prasniatko on 10/07/2017.
  */
+// TODO use @Parcelize or something more up to date.
+@JsonClass(generateAdapter = true)
 data class Metadata(
     val url: String,
     val format: String,
