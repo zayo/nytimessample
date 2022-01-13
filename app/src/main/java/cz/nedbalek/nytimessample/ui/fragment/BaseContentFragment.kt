@@ -11,10 +11,11 @@ import androidx.fragment.app.Fragment
 import cz.nedbalek.nytimessample.R
 import cz.nedbalek.nytimessample.connection.Api
 import cz.nedbalek.nytimessample.connection.ArticlesResponse
+import cz.nedbalek.nytimessample.databinding.BaseContentFragmentBinding
 import cz.nedbalek.nytimessample.ui.activity.DetailActivity
 import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter
+import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType
 import cz.nedbalek.nytimessample.ui.helpers.CardViewDecorator
-import kotlinx.android.synthetic.main.base_content_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,11 +30,15 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         VIEWED
     }
 
+    private var _binding: BaseContentFragmentBinding? = null
+    private val binding: BaseContentFragmentBinding
+        get() = requireNotNull(_binding)
+
     private val adapter by lazy {
-        ArticlesAdapter(requireContext()) { DetailActivity.create(requireActivity(), it) }
+        ArticlesAdapter(requireActivity()) { DetailActivity.create(requireActivity(), it) }
     }
 
-    lateinit var apiCall: Call<ArticlesResponse>
+    private lateinit var apiCall: Call<ArticlesResponse>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,29 +50,40 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.base_content_fragment, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?) =
+        BaseContentFragmentBinding.inflate(inflater, container, false).run {
+            _binding = this
+            root
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        recycler.adapter = adapter
-        recycler.addItemDecoration(CardViewDecorator(
-            requireActivity().resources.getDimensionPixelSize(R.dimen.material_default)))
+        with(binding) {
+            recycler.adapter = adapter
+            recycler.addItemDecoration(CardViewDecorator(
+                requireActivity().resources.getDimensionPixelSize(R.dimen.material_default)))
 
-        swipeRefreshLayout.setOnRefreshListener {
-            if (apiCall.isExecuted) {
-                apiCall = apiCall.clone()
+            swipeRefreshLayout.setOnRefreshListener {
+                if (apiCall.isExecuted) {
+                    apiCall = apiCall.clone()
+                }
+                apiCall.enqueue(this@BaseContentFragment)
             }
-            apiCall.enqueue(this)
+
+            swipeRefreshLayout.isRefreshing = true
         }
 
         apiCall.enqueue(this)
-        swipeRefreshLayout.isRefreshing = true
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     fun reselected() {
-        recycler?.smoothScrollToPosition(0)
+        binding.recycler.smoothScrollToPosition(0)
     }
 
     override fun onResponse(call: Call<ArticlesResponse>?, response: Response<ArticlesResponse>) {
@@ -76,12 +92,12 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         } else {
             toast(R.string.toast_cant_refresh)
         }
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onFailure(call: Call<ArticlesResponse>?, t: Throwable?) {
         toast(R.string.toast_cant_refresh)
-        swipeRefreshLayout.isRefreshing = false
+        binding.swipeRefreshLayout.isRefreshing = false
     }
 
     companion object {

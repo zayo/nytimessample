@@ -1,29 +1,30 @@
 package cz.nedbalek.nytimessample.ui.adapter
 
-import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
-import cz.nedbalek.nytimessample.R
+import cz.nedbalek.nytimessample.databinding.ItemArticleSimpleBinding
 import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter.PositionComposer
 import cz.nedbalek.nytimessample.ui.helpers.getColor
 import cz.nedbalek.nytimessample.viewobjects.Article
-import kotlinx.android.synthetic.main.item_article_simple.view.*
 
-class ArticlesAdapter(context: Context, val listener: ArticlesActionListener) :
+/**
+ * Adapter for [Article].
+ */
+class ArticlesAdapter(context: ContextThemeWrapper, val listener: ArticlesActionListener) :
     ListAdapter<Article, ArticlesAdapter.ArticleViewHolder>(Differ()) {
 
     private val picasso: Picasso = Picasso.Builder(context).build()
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val clickComposer = PositionComposer { position -> listener(getItem(position)) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder =
         ArticleViewHolder(
-            LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_article_simple, parent, false),
+            ItemArticleSimpleBinding.inflate(inflater, parent, false),
             clickComposer,
             picasso
         )
@@ -31,22 +32,22 @@ class ArticlesAdapter(context: Context, val listener: ArticlesActionListener) :
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) =
         holder.bind(getItem(position))
 
-    class ArticleViewHolder(view: View, provider: PositionComposer, private val picasso: Picasso) :
-        RecyclerView.ViewHolder(view) {
-        private val title = view.article_title
-        private val category = view.article_category
-        private val image = view.article_image
+    class ArticleViewHolder(
+        private val binding: ItemArticleSimpleBinding,
+        provider: PositionComposer,
+        private val picasso: Picasso
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            view.article_card_view.setOnClickListener { provider(bindingAdapterPosition) }
+            binding.articleCardView.setOnClickListener { provider(bindingAdapterPosition) }
         }
 
-        fun bind(article: Article) {
-            title.text = article.title
-            category.text = article.section
-            category.setTextColor(getColor(article.section))
+        fun bind(article: Article) = with(binding) {
+            articleTitle.text = article.title
+            articleCategory.text = article.section
+            articleCategory.setTextColor(getColor(article.section))
 
-            picasso.load(article.imageUrl).into(image)
+            picasso.load(article.imageUrl).into(articleImage)
         }
     }
 
@@ -58,6 +59,9 @@ class ArticlesAdapter(context: Context, val listener: ArticlesActionListener) :
             oldItem == newItem
     }
 
+    /**
+     * Listener of [Article] clicked in this recycler.
+     */
     fun interface ArticlesActionListener {
         operator fun invoke(article: Article)
     }

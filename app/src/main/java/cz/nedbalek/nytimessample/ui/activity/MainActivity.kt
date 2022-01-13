@@ -5,12 +5,12 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.navigation.NavigationBarView
 import cz.nedbalek.nytimessample.R
+import cz.nedbalek.nytimessample.databinding.ActivityMainBinding
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.MAILED
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.SHARED
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.VIEWED
 import cz.nedbalek.nytimessample.ui.helpers.show
-import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Root activity responsible for displaying Fragments within bottom navigation.
@@ -27,10 +27,12 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        navigation.setOnItemSelectedListener(this)
-        navigation.setOnItemReselectedListener(this)
+        ActivityMainBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            navigation.setOnItemSelectedListener(this@MainActivity)
+            navigation.setOnItemReselectedListener(this@MainActivity)
+        }
 
         show(mostMailedFragment)
     }

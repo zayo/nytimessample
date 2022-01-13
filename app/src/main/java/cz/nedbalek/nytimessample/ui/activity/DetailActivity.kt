@@ -6,44 +6,48 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
-import cz.nedbalek.nytimessample.R
+import cz.nedbalek.nytimessample.databinding.ActivityDetailBinding
 import cz.nedbalek.nytimessample.ui.helpers.getColor
 import cz.nedbalek.nytimessample.viewobjects.Article
-import kotlinx.android.synthetic.main.activity_detail.*
 
 /**
  * Detail activity that displays the [Article].
  */
 class DetailActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_detail)
+        val article = intent.extras?.get(PARAM_ARTICLE) as? Article
+            ?: run { finish(); return@onCreate }
 
-        setSupportActionBar(toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
-        supportActionBar?.setDisplayShowTitleEnabled(true)
+        ActivityDetailBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+            setSupportActionBar(toolbar)
+            populate(article)
+        }
 
-        val article = intent.extras?.get(PARAM_ARTICLE) as? Article ?: return
-
-        populate(article)
+        supportActionBar?.run {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+            setDisplayShowTitleEnabled(true)
+        }
     }
 
-    private fun populate(article: Article) {
-        Picasso.Builder(this).build().load(article.imageUrl).into(image)
+    private fun ActivityDetailBinding.populate(article: Article) {
+        Picasso.Builder(this@DetailActivity)
+            .build()
+            .load(article.imageUrl)
+            .into(image)
 
-        article_title.text = article.title
-        article_category.text = article.section
-        article_category.setTextColor(getColor(article.section))
-        article_author.text = article.byline
-        article_abstract.text = article.abstract
-        article_date.text = article.published_date
-
-        action_read_full.setOnClickListener {
-            val i = Intent(Intent.ACTION_VIEW)
-            i.data = Uri.parse(article.url)
-            startActivity(i)
+        articleTitle.text = article.title
+        articleCategory.text = article.section
+        articleCategory.setTextColor(getColor(article.section))
+        articleAuthor.text = article.byline
+        articleAbstract.text = article.abstract
+        articleDate.text = article.published_date
+        actionReadFull.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(article.url)))
         }
     }
 
