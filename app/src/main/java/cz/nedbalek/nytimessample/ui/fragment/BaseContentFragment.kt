@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import cz.nedbalek.nytimessample.R
 import cz.nedbalek.nytimessample.connection.Api
@@ -18,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 /**
- * Created by prasniatko on 10/07/2017.
+ * Fragment template for displaying [ContentType] customized screens with content.
  */
 class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
     enum class ContentType {
@@ -43,9 +45,8 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        return inflater.inflate(R.layout.base_content_fragment, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(R.layout.base_content_fragment, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,29 +74,26 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         if (response.isSuccessful) {
             response.body()?.results?.let { adapter.submitList(it) }
         } else {
-            Toast.makeText(activity, getString(R.string.toast_cant_refresh), Toast.LENGTH_SHORT)
-                .show()
+            toast(R.string.toast_cant_refresh)
         }
         swipeRefreshLayout.isRefreshing = false
     }
 
     override fun onFailure(call: Call<ArticlesResponse>?, t: Throwable?) {
-        Toast.makeText(activity, getString(R.string.toast_cant_refresh), Toast.LENGTH_SHORT).show()
+        toast(R.string.toast_cant_refresh)
         swipeRefreshLayout.isRefreshing = false
     }
 
     companion object {
 
-        const val TAG = "BaseContentFragment"
         const val PARAM_TYPE = "type"
 
-        fun create(type: ContentType): BaseContentFragment {
-            val fragment = BaseContentFragment()
-            val bundle = Bundle()
-            bundle.putInt(PARAM_TYPE, type.ordinal)
-            fragment.arguments = bundle
-            return fragment
-        }
+        fun create(type: ContentType): BaseContentFragment =
+            BaseContentFragment().apply {
+                arguments = bundleOf(PARAM_TYPE to type.ordinal)
+            }
     }
-
 }
+
+private fun Fragment.toast(@StringRes resId: Int) =
+    Toast.makeText(activity, resId, Toast.LENGTH_SHORT).show()

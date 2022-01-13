@@ -5,18 +5,24 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
- * Created by prasniatko on 11/07/2017.
+ * Decorates items of recycler view.
+ * Adds [margin] to every item's side.
  */
-class CardViewDecorator(val dim: Int) : RecyclerView.ItemDecoration() {
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+class CardViewDecorator(private val margin: Int) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
 
         if (parent.getChildAdapterPosition(view) == 0) {
-            outRect.top = dim
+            // Add top only to first item, otherwise bottom will be used from spacing.
+            outRect.top = margin
         }
-        outRect.left = dim
-        outRect.right = dim
-        outRect.bottom = dim
+        outRect.left = margin
+        outRect.right = margin
+        outRect.bottom = margin
     }
-
 }

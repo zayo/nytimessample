@@ -14,13 +14,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object Api {
 
-    private const val TAG = "Api"
-    private const val KEY = "lCQfxzIcqYmtLoFBygmvu8WigEtlI5vW"
-
     private val logger by lazy {
-        val log = HttpLoggingInterceptor()
-        log.level = HttpLoggingInterceptor.Level.BODY
-        log
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
     }
 
     private val client by lazy {
@@ -32,7 +29,8 @@ object Api {
                     .build()
                 val newRequest = it.request().newBuilder()
                     .url(apiedUrl)
-                it.proceed(newRequest.build())
+                    .build()
+                it.proceed(newRequest)
             }
             .addInterceptor(logger)
             .cache(null)
@@ -55,5 +53,6 @@ object Api {
     fun mostMailed() = service.mostMailed("all-sections", 30)
     fun mostShared() = service.mostShared("all-sections", 30)
     fun mostViewed() = service.mostViewed("all-sections", 30)
-
 }
+
+private const val KEY = "lCQfxzIcqYmtLoFBygmvu8WigEtlI5vW"

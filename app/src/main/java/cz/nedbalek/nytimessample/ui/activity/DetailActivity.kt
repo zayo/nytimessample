@@ -11,6 +11,9 @@ import cz.nedbalek.nytimessample.ui.helpers.getColor
 import cz.nedbalek.nytimessample.viewobjects.Article
 import kotlinx.android.synthetic.main.activity_detail.*
 
+/**
+ * Detail activity that displays the [Article].
+ */
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +48,13 @@ class DetailActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val TAG = "DetailActivity"
         const val PARAM_ARTICLE = "article"
 
         fun create(context: Activity, article: Article) {
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra(PARAM_ARTICLE, article)
-            context.startActivity(intent)
+            Intent(context, DetailActivity::class.java).run {
+                putExtra(PARAM_ARTICLE, article)
+                context.startActivity(this)
+            }
         }
     }
-
 }

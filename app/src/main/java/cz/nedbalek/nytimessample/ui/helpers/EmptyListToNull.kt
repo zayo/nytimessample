@@ -32,7 +32,7 @@ class EmptyListToNull : JsonAdapter.Factory {
             override fun fromJson(reader: JsonReader): Any? {
                 val peek = reader.peek()
                 if (peek !== JsonReader.Token.BEGIN_ARRAY) {
-                    Log.e(TAG, "Skipping bad value at path: %s [%s for %s]".format(reader.getPath(), peek, JsonReader.Token.BEGIN_ARRAY))
+                    Log.e(TAG, "Skipping bad value at path: %s [%s for %s]".format(reader.path, peek, JsonReader.Token.BEGIN_ARRAY))
                     reader.skipValue()
                     return null
                 }
@@ -40,9 +40,8 @@ class EmptyListToNull : JsonAdapter.Factory {
             }
 
             @Throws(IOException::class)
-            override fun toJson(writer: JsonWriter, value: Any?) {
+            override fun toJson(writer: JsonWriter, value: Any?) =
                 delegate.toJson(writer, value)
-            }
         }
     }
 }

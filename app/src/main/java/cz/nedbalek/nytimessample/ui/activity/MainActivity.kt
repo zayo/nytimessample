@@ -12,6 +12,9 @@ import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType.VIE
 import cz.nedbalek.nytimessample.ui.helpers.show
 import kotlinx.android.synthetic.main.activity_main.*
 
+/**
+ * Root activity responsible for displaying Fragments within bottom navigation.
+ */
 class MainActivity : AppCompatActivity(),
     NavigationBarView.OnItemSelectedListener,
     NavigationBarView.OnItemReselectedListener {
@@ -21,10 +24,6 @@ class MainActivity : AppCompatActivity(),
     private val mostViewedFragment by lazy { BaseContentFragment.create(VIEWED) }
 
     private var currentFragment: BaseContentFragment? = null
-        set(value) {
-            field = value
-            value?.show(R.id.content, this)
-        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,24 +32,22 @@ class MainActivity : AppCompatActivity(),
         navigation.setOnItemSelectedListener(this)
         navigation.setOnItemReselectedListener(this)
 
-        currentFragment = mostMailedFragment
+        show(mostMailedFragment)
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        fun use(fragment: BaseContentFragment?): Boolean {
-            currentFragment = fragment
-            return fragment != null
-        }
-
-        return when (item.itemId) {
-            R.id.navigation_most_mailed -> use(mostMailedFragment)
-            R.id.navigation_most_shared -> use(mostSharedFragment)
-            R.id.navigation_most_viewed -> use(mostViewedFragment)
-            else -> use(null)
-        }
-    }
+    override fun onNavigationItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.navigation_most_mailed -> show(mostMailedFragment)
+        R.id.navigation_most_shared -> show(mostSharedFragment)
+        R.id.navigation_most_viewed -> show(mostViewedFragment)
+        else -> error("Undefined item for BottomNavigation")
+    }.let { true }
 
     override fun onNavigationItemReselected(item: MenuItem) {
         currentFragment?.reselected()
+    }
+
+    private fun show(fragment: BaseContentFragment) {
+        currentFragment = fragment
+        currentFragment?.show(R.id.content, this)
     }
 }
