@@ -8,47 +8,42 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle.State
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import cz.nedbalek.nytimessample.R
-import cz.nedbalek.nytimessample.connection.Api
-import cz.nedbalek.nytimessample.connection.ArticlesResponse
 import cz.nedbalek.nytimessample.databinding.BaseContentFragmentBinding
 import cz.nedbalek.nytimessample.ui.activity.DetailActivity
 import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter
 import cz.nedbalek.nytimessample.ui.fragment.BaseContentFragment.ContentType
 import cz.nedbalek.nytimessample.ui.helpers.CardViewDecorator
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 /**
  * Fragment template for displaying [ContentType] customized screens with content.
  */
-class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
+class BaseContentFragment : Fragment() {
     enum class ContentType {
         MAILED,
         SHARED,
         VIEWED
     }
 
-    private var _binding: BaseContentFragmentBinding? = null
-    private val binding: BaseContentFragmentBinding
-        get() = requireNotNull(_binding)
-
     private val adapter by lazy {
         ArticlesAdapter(requireActivity()) { DetailActivity.create(requireActivity(), it) }
     }
 
-    private lateinit var apiCall: Call<ArticlesResponse>
+    private var _binding: BaseContentFragmentBinding? = null
+    private val binding: BaseContentFragmentBinding
+        get() = requireNotNull(_binding)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        apiCall = when (ContentType.values()[requireArguments().getInt(PARAM_TYPE)]) {
-            ContentType.MAILED -> Api.mostMailed()
-            ContentType.SHARED -> Api.mostShared()
-            ContentType.VIEWED -> Api.mostViewed()
-        }
+    private val type by lazy {
+        ContentType.values()[requireArguments().getInt(PARAM_TYPE)]
     }
+
+    private val viewModel: BaseContentViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, state: Bundle?) =
         BaseContentFragmentBinding.inflate(inflater, container, false).run {
@@ -65,16 +60,15 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
                 requireActivity().resources.getDimensionPixelSize(R.dimen.material_default)))
 
             swipeRefreshLayout.setOnRefreshListener {
-                if (apiCall.isExecuted) {
-                    apiCall = apiCall.clone()
-                }
-                apiCall.enqueue(this@BaseContentFragment)
+                viewModel.load(type)
             }
-
-            swipeRefreshLayout.isRefreshing = true
         }
 
-        apiCall.enqueue(this)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(State.STARTED) {
+                viewModel.state.collect(::handleState)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -86,18 +80,24 @@ class BaseContentFragment : Fragment(), Callback<ArticlesResponse> {
         binding.recycler.smoothScrollToPosition(0)
     }
 
-    override fun onResponse(call: Call<ArticlesResponse>?, response: Response<ArticlesResponse>) {
-        if (response.isSuccessful) {
-            response.body()?.results?.let { adapter.submitList(it) }
-        } else {
+    private fun handleState(state: BaseContentViewModel.State) = when (state) {
+        is BaseContentViewModel.State.Idle -> {
+            viewModel.load(type)
+        }
+
+        is BaseContentViewModel.State.Loading -> {
+            binding.swipeRefreshLayout.isRefreshing = true
+        }
+
+        is BaseContentViewModel.State.Failed -> {
+            binding.swipeRefreshLayout.isRefreshing = false
             toast(R.string.toast_cant_refresh)
         }
-        binding.swipeRefreshLayout.isRefreshing = false
-    }
 
-    override fun onFailure(call: Call<ArticlesResponse>?, t: Throwable?) {
-        toast(R.string.toast_cant_refresh)
-        binding.swipeRefreshLayout.isRefreshing = false
+        is BaseContentViewModel.State.Data -> {
+            binding.swipeRefreshLayout.isRefreshing = false
+            adapter.submitList(state.articles)
+        }
     }
 
     companion object {

@@ -9,9 +9,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 /**
- * Created by prasniatko on 19/05/2017.
+ * Retrofit Api for the NYTimes BE.
  */
-
 object Api {
 
     private val logger by lazy {
@@ -50,9 +49,9 @@ object Api {
 
     private val service = retrofit.create<ServerServices>(ServerServices::class.java)
 
-    fun mostMailed() = service.mostMailed("all-sections", 30)
-    fun mostShared() = service.mostShared("all-sections", 30)
-    fun mostViewed() = service.mostViewed("all-sections", 30)
+    suspend fun mostMailed() = service.mostMailed("all-sections", 30)
+    suspend fun mostShared() = service.mostShared("all-sections", 30)
+    suspend fun mostViewed() = service.mostViewed("all-sections", 30)
 }
 
 private const val KEY = "lCQfxzIcqYmtLoFBygmvu8WigEtlI5vW"
