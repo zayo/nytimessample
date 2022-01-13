@@ -7,16 +7,16 @@ import android.os.Parcelable
  * Created by prasniatko on 10/07/2017.
  */
 data class Metadata(
-        val url: String,
-        val format: String,
-        val height: Int,
-        val width: Int
+    val url: String,
+    val format: String,
+    val height: Int,
+    val width: Int
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-            parcel.readString() ?: "",
-            parcel.readString() ?: "",
-            parcel.readInt(),
-            parcel.readInt())
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readInt(),
+        parcel.readInt())
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(url)

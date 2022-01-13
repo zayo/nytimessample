@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import coil.load
+import coil.request.Disposable
 import cz.nedbalek.nytimessample.databinding.ItemArticleSimpleBinding
 import cz.nedbalek.nytimessample.ui.adapter.ArticlesAdapter.PositionComposer
 import cz.nedbalek.nytimessample.ui.helpers.getColor
@@ -18,15 +19,13 @@ import cz.nedbalek.nytimessample.viewobjects.Article
 class ArticlesAdapter(context: ContextThemeWrapper, val listener: ArticlesActionListener) :
     ListAdapter<Article, ArticlesAdapter.ArticleViewHolder>(Differ()) {
 
-    private val picasso: Picasso = Picasso.Builder(context).build()
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private val clickComposer = PositionComposer { position -> listener(getItem(position)) }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder =
         ArticleViewHolder(
             ItemArticleSimpleBinding.inflate(inflater, parent, false),
-            clickComposer,
-            picasso
+            clickComposer
         )
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) =
@@ -35,19 +34,22 @@ class ArticlesAdapter(context: ContextThemeWrapper, val listener: ArticlesAction
     class ArticleViewHolder(
         private val binding: ItemArticleSimpleBinding,
         provider: PositionComposer,
-        private val picasso: Picasso
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        private var disposable: Disposable? = null
 
         init {
             binding.articleCardView.setOnClickListener { provider(bindingAdapterPosition) }
         }
 
         fun bind(article: Article) = with(binding) {
+            disposable?.dispose()
             articleTitle.text = article.title
             articleCategory.text = article.section
             articleCategory.setTextColor(getColor(article.section))
-
-            picasso.load(article.imageUrl).into(articleImage)
+            disposable = articleImage.load(article.imageUrl) {
+                crossfade(1000)
+            }
         }
     }
 

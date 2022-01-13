@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.squareup.picasso.Picasso
+import coil.load
 import cz.nedbalek.nytimessample.databinding.ActivityDetailBinding
 import cz.nedbalek.nytimessample.ui.helpers.getColor
 import cz.nedbalek.nytimessample.viewobjects.Article
@@ -35,10 +35,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun ActivityDetailBinding.populate(article: Article) {
-        Picasso.Builder(this@DetailActivity)
-            .build()
-            .load(article.imageUrl)
-            .into(image)
+        image.load(article.imageUrl)
 
         articleTitle.text = article.title
         articleCategory.text = article.section

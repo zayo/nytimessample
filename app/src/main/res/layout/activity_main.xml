@@ -6,15 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="cz.nedbalek.nytimessample.ui.activity.MainActivity"
-    >
+    tools:context="cz.nedbalek.nytimessample.ui.activity.MainActivity">
 
     <FrameLayout
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
     </FrameLayout>
 
@@ -26,7 +24,6 @@
         android:background="@color/colorPrimary"
         app:itemIconTint="@drawable/cl_bb_labels"
         app:itemTextColor="@drawable/cl_bb_labels"
-        app:menu="@menu/navigation"
-        />
+        app:menu="@menu/navigation" />
 
 </LinearLayout>

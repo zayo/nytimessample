@@ -8,20 +8,20 @@ import com.squareup.moshi.Json
  * Created by prasniatko on 10/07/2017.
  */
 data class Media(
-        val type: String,
-        val subtype: String,
-        val caption: String,
-        val copyright: String,
-        @Json(name = "media-metadata") val metadata: List<Metadata>?
+    val type: String,
+    val subtype: String,
+    val caption: String,
+    val copyright: String,
+    @Json(name = "media-metadata") val metadata: List<Metadata>?
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-            parcel.readString()!!,
-            parcel.readString()!!,
-            parcel.readString()!!,
-            parcel.readString()!!,
-            mutableListOf<Metadata>().apply {
-                parcel.readTypedList(this, Metadata.CREATOR)
-            })
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        parcel.readString()!!,
+        mutableListOf<Metadata>().apply {
+            parcel.readTypedList(this, Metadata.CREATOR)
+        })
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(type)
